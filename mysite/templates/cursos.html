@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Cursos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+      .card-deck {
+        margin-top: 20px;
+      }
+
+    </style>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sono&display=swap');
+   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sono&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+
+      body {
+        background-color: #8E77F8;
+      }
+      .card-deck {
+        margin-top: 20px;
+      }
+      .card {
+        background-color: #91F8B1;
+        color: #000000;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px #C6C3FF;
+        transition: all 0.3s ease-in-out;
+      }
+      .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 0px 20px #C6C3FF ;
+      }
+      .card-title {
+        font-family: 'Titillium web' !important;
+        font-size: 44px;
+        font-weight: bold;
+
+      }
+      .card-text {
+        font-family: 'Bebas Neue';
+        font-size: 25px;
+      }
+    </style>
+
+
+  </head>
+  <body>
+    <div class="container">
+      <div class="card-deck" id="card-deck"></div>
+    </div>
+
+    <script>
+      // Funcion que obtiene los datos de la API y crea las cards
+      function obtenerDatos() {
+        // Utilizamos la funcion fetch para obtener los datos de la API , La funcion fetch es una API web que permite realizar solicitudes HTTP asincronicas, lo que significa que puede solicitar datos de recursos en linea sin tener que recargar la pagina web completa.
+        fetch('https://potrerolcpp2-default-rtdb.firebaseio.com/cursos.json')
+        // El navegador enviara una solicitud HTTP GET al servidor que aloja la API para obtener los datos.
+        //Luego, la respuesta a esa solicitud se pasa a la funcion .then(),se crea el objeto response, que guarda la PROMESA Y donde se llama a .json() para convertir los datos en formato JSON a un objeto JavaScript.
+          .then(response => response.json())
+          .then(data => { //Recibe esos datos y crea la variable data que va a contener todos los datos en formato JSON que se obtienen utilizando la funcion fetch.
+            // Obtener el elemento contenedor para las cards
+            const cardDeck = document.getElementById('card-deck');
+            cardDeck.innerHTML = ''; //limpia todo lo que hay en la card anterior(esto hace que siempre que se ejecute la funcion la card cargue de nuevo y no muestre info que ya tenga cargado)
+            // Iterar sobre los datos y crear una card para cada objeto
+            for (let key in data) {  //La variable data contiene los datos en formato JSON que se obtienen utilizando la funcion fetch.
+              const objeto = data[key]; //se utiliza para recorrer los objetos dentro de data. En cada iteracion, la variable key tomara el valor de una de las propiedades de data. La variable objeto se utiliza para almacenar el objeto que se encuentra en la posicion key de data.
+
+              // Crear los elementos HTML para la card
+              const card = document.createElement('div');  //Aqui se esta creando un nuevo elemento HTML div y asignandolo a la variable card. Luego se agrega la clase "card" a ese elemento utilizando el metodo classList.add().
+              card.classList.add('card');
+
+              const imagen = document.createElement('img');
+              imagen.classList.add('card-img-top');
+              imagen.src = objeto.imagen;
+
+              const cardBody = document.createElement('div');
+              cardBody.classList.add('card-body');
+
+              const titulo = document.createElement('h3');
+              titulo.classList.add('card-title');
+              titulo.textContent = objeto["nombrecurso"];
+
+              const duracion = document.createElement('p');
+              duracion.classList.add('card-text');
+              duracion.textContent = 'Duracion: ' + objeto.duracion + ' horas';
+
+              const descripcion = document.createElement('p');
+            descripcion.classList.add('card-text');
+            descripcion.textContent = objeto.parrafo;
+
+              const valor = document.createElement('p');
+              valor.classList.add('card-text');
+              valor.textContent = 'Valor: $' + objeto.valor;
+
+              // Agregar los elementos a la card, crea los elementos HTML que conforman una tarjeta y los agrega en el orden correspondiente, para finalmente agregar la tarjeta completa al contenedor de tarjetas.
+              cardBody.appendChild(titulo);
+              cardBody.appendChild(descripcion);
+              cardBody.appendChild(duracion);
+              cardBody.appendChild(valor);
+
+              card.appendChild(imagen);
+              card.appendChild(cardBody);
+
+              cardDeck.appendChild(card);
+            }
+          });
+      }
+
+      // Ejecutar la funcion obtenerDatos al cargar la pagina
+      obtenerDatos();
+
+      // Ejecutar la funcion obtenerDatos cada 5 segundos utilizando setInterval
+      setInterval(obtenerDatos, 5000);
+    </script>
+  </body>
+</html>
+
+
+{% endblock%}

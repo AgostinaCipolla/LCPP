@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Perfil</title>
+  <style>
+    /* Estilos básicos */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    table {
+      border-collapse: collapse;
+      width: 400px;
+      margin: 0 auto;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Perfil</h1>
+
+  <table>
+    <tr>
+      <th>DNI:</th>
+      <td id="dni"></td>
+    </tr>
+    <tr>
+      <th>Nombre y Apellido:</th>
+      <td id="nombreyapellido"></td>
+    </tr>
+    <tr>
+      <th>Email:</th>
+      <td id="mail"></td>
+    </tr>
+    <tr>
+      <th>Curso:</th>
+      <td id="curso"></td>
+    </tr>
+  </table>
+
+  <script>
+    // Obtener el ID del registro desde la URL
+    var urlParams = new URLSearchParams(window.location.search);
+    var registroId = urlParams.get("id");
+
+    // Obtener los datos del registro desde la API
+    var registroUrl = "https://registro-fa9b3-default-rtdb.firebaseio.com/registro/" + registroId + ".json";
+    fetch(registroUrl)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        document.getElementById("dni").innerText = data.dni;
+        document.getElementById("nombreyapellido").innerText = data.nombreyapellido;
+        document.getElementById("mail").innerText = data.mail;
+        document.getElementById("curso").innerText = data.curso;
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+  </script>
+</body>
+</html>
+
